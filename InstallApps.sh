@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Function to install Xcode Command Line Tools
+install_xcode_cli() {
+  echo "Installing Xcode Command Line Tools..."
+  xcode-select --install &>/dev/null
+
+  # Wait until the Xcode CLI is installed
+  until xcode-select -p &>/dev/null; do
+    echo "Waiting for Xcode CLI installation to complete..."
+    sleep 1
+  done
+  echo "Xcode CLI installed."
+}
+
 # Function to install Homebrew
 install_homebrew() {
   echo "Installing Homebrew..."
@@ -12,6 +25,13 @@ install_cask() {
   echo "Installing $cask_name..."
   brew install --cask $cask_name
 }
+
+# Check if Xcode CLI is installed, if not, install it
+if xcode-select -p &>/dev/null; then
+  echo "Xcode CLI already installed."
+else
+  install_xcode_cli
+fi
 
 # Check if Homebrew is already installed
 if command -v brew &>/dev/null; then
