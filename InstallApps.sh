@@ -3,14 +3,17 @@
 # Function to install Xcode Command Line Tools
 install_xcode_cli() {
   echo "Installing Xcode Command Line Tools..."
-  xcode-select --install &>/dev/null
+  
+  # Find and install the latest Xcode Command Line Tools
+  softwareupdate -l | grep "\*.*Command Line" | grep -v "Label: " | sed 's/^   \* //g' | xargs -I {} softwareupdate -i {} --verbose
 
-  # Wait until the Xcode CLI is installed
-  until xcode-select -p &>/dev/null; do
-    echo "Waiting for Xcode CLI installation to complete..."
-    sleep 1
-  done
-  echo "Xcode CLI installed."
+  # Check the installation status
+  if xcode-select -p &>/dev/null; then
+    echo "Xcode CLI installed."
+  else
+    echo "Failed to install Xcode CLI."
+    exit 1
+  fi
 }
 
 # Function to install Homebrew
